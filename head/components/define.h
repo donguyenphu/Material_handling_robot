@@ -1,5 +1,5 @@
-#define RX_ARDUINO 0
-#define TX_ARDUINO 1
+#define RX_ARDUINO 10
+#define TX_ARDUINO 11
 
 #define SERVOMIN 150 // giá trị xung nhỏ
 #define SERVOMAX 600 // giá trị xung lớn
@@ -25,3 +25,9 @@
 #define M4_PWM 7
 #define M4_IN2 6
 #define M4_IN1 5
+
+#define FB_TO_LR_RATIO 99/60
+
+#define DRIVE_BASE_RATIO 20
+
+#define SLIDE_RATIO 4000
