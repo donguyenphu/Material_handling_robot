@@ -31,7 +31,7 @@
 #define M4_IN1 5
 
 /// max value of left-right joinstick is 60 and forward-backward is 99 -> multiply to the left-right value to equalize the value
-#define FB_TO_LR_RATIO 99/60
+#define FB_TO_LR_RATIO 1
 
 /// power drive base gain
 #define DRIVE_BASE_RATIO 20

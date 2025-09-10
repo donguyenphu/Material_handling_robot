@@ -3,6 +3,7 @@ extern Adafruit_PWMServoDriver pwm2;
 extern Servo s1, s2;
 
 // default functions
+// g1: positive direction, g2: negative direction, gp: set pwm
 void stop(Adafruit_PWMServoDriver pwm, int g1, int g2, int gp) {
   pwm.setPWM(g1, 0, 0);
   pwm.setPWM(g2, 0, 0);
@@ -34,7 +35,7 @@ void driveBase(String command) {
   if (LR == 'L') LRspeed *= -1;
   /*
     Instead of using FB and LR seperately
-    We can use robot-centric movement
+    We can use consider FB and LR as XY coordinate and use robot-centric movement
   */
   int leftMotor = FBspeed + LRspeed;
   int rightMotor = FBspeed - LRspeed;
@@ -52,16 +53,22 @@ void driveBase(String command) {
   }
 }
 void upBothSlide(String command, int state) {
-  forward(pwm, state * SLIDE_RATIO, M3_IN1, M3_IN2, M3_PWM);
+  forward(pwm2, state * SLIDE_RATIO, M1_IN1, M1_IN2, M1_PWM);
   forward(pwm, state * SLIDE_RATIO, M4_IN1, M4_IN2, M4_PWM);
 }
 void downBothSlide(String command, int state) {
-  backward(pwm, state * SLIDE_RATIO, M3_IN1, M3_IN2, M3_PWM);
+  backward(pwm2, state * SLIDE_RATIO, M1_IN1, M1_IN2, M1_PWM);
   backward(pwm, state * SLIDE_RATIO, M4_IN1, M4_IN2, M4_PWM);
+}
+void openBaskets(String command, int state) {
+  forward(pwm, state * SLIDE_RATIO, M3_IN1, M3_IN2, M3_PWM);
+}
+void closeBaskets(String command, int state) {
+  backward(pwm, state * SLIDE_RATIO, M3_IN1, M3_IN2, M3_PWM);
 }
 void servoLeft(Servo s, String command) {
   if (command == "X") {
-    s.write(90);
+    s.write(180);
   }
   else if (command == "x") {
     s.write(0);
@@ -69,7 +76,7 @@ void servoLeft(Servo s, String command) {
 }
 void servoRight(Servo s, String command) {
   if (command == "V") {
-    s.write(90);
+    s.write(180);
   }
   else if (command == "v") {
     s.write(0);

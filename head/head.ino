@@ -17,10 +17,18 @@ SoftwareSerial hc06(RX_ARDUINO, TX_ARDUINO); // RX, TX
 
 Servo s1, s2;
 
-int stateUp = 0, stateDown = 0; /// state for up and down both slides
+/// state for up and down both slides
+int stateUpSlide = 0; 
+int stateDownSlide = 0;
+bool prevUpSlide = false, prevDownSlide = false, curUpSlide = false, curDownSlide = false;
+
+/// state for open and close baskets
+int stateBasketOpen = 0;
+int stateBasketClose = 0;
+bool prevBasketOpen = false, prevBasketClose = false, curBasketOpen = false, curBasketClose = false;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(9600); /// serial baud rate has to be the same as hc06 to read command
   hc06.begin(9600); /// default hc06 baud rate
   pwm.begin();
   pwm.setPWMFreq(50); // 50Hz for servo
@@ -30,11 +38,11 @@ void setup() {
   s2.attach(9); /// D9 of arduino (bottom gate)
 
   // Initialize speed all motors
-  stop(pwm, M1_IN1, M1_IN2, M1_PWM);
-  stop(pwm, M2_IN1, M2_IN2, M2_PWM);
-  stop(pwm, M3_IN1, M3_IN2, M3_PWM);
-  stop(pwm, M4_IN1, M4_IN2, M4_PWM);
-  stop(pwm2, M1_IN1, M1_IN2, M1_PWM);
+  stop(pwm, M1_IN1, M1_IN2, M1_PWM); /// drivebase left
+  stop(pwm, M2_IN1, M2_IN2, M2_PWM); /// drivebase right
+  stop(pwm, M3_IN1, M3_IN2, M3_PWM); /// basket
+  stop(pwm, M4_IN1, M4_IN2, M4_PWM); /// slide behind
+  stop(pwm2, M1_IN1, M1_IN2, M1_PWM); /// slide front
 
   // Set default angle for servos
   setAngleServo(s1, 0);
@@ -49,6 +57,7 @@ void setup() {
   V (switch state to nhỏ) (servo toggle right)
   U  (switch state to nhỏ) (up slide front)
   W (switch state to nhỏ) (down slide front)
+  1
 */
 
 void loop() {
@@ -58,14 +67,34 @@ void loop() {
     -> we read until the end line to get full command */
     String command = hc06.readStringUntil('\n');
     if (command.length() == 6) driveBase(command); /// Format: FxxLxx (F can be B, L can be R)
-    if (command == "Z") { /// Z first turn -> up 2 slides, Z second turn -> stop 2 slides
-      stateUp = (stateUp + 1) % 2;
-      upBothSlide(command, stateUp);
+    /// Z first turn -> up 2 slides, Z second turn -> stop 2 slides
+    curUpSlide = (command == "Z");
+    if (curUpSlide && !prevUpSlide) {
+      stateUpSlide = (stateUpSlide + 1) % 2;
+      upBothSlide(command, stateUpSlide);
     }
-    if (command == "Y") { /// Y first turn -> down 2 slides, Y second turn -> stop 2 slides
-      stateDown = (stateDown + 1) % 2;
-      downBothSlide(command, stateDown);
+    prevUpSlide = curUpSlide;
+    /// Y first turn -> down 2 slides, Y second turn -> stop 2 slides
+    curDownSlide = (command == "Y");  
+    if (curDownSlide && !prevDownSlide) {
+      stateDownSlide = (stateDownSlide + 1) % 2;
+      downBothSlide(command, stateDownSlide);
     }
+    prevDownSlide = curDownSlide;
+    /// first turn,-> open baskets, second turn -> stop baskets 
+    curBasketOpen = (command == '1');
+    if (curBasketOpen && !prevBasketOpen) {
+      stateBasketOpen = (stateBasketOpen + 1) % 2;
+      openBaskets(command, stateBasketOpen);
+    }
+    prevBasketOpen = curBasketOpen;
+    /// first turn,-> close baskets, second turn -> stop baskets
+    curBasketClose = (command == '2');
+    if (curBasketClose && !prevBasketClose) {
+      stateBasketClose = (stateBasketClose + 1) % 2;
+      closeBaskets(command, stateBasketClose);
+    }
+    prevBasketClose = curBasketClose;
     if (command == "X" || command == "x") servoLeft(s1, command); /// X when open, x when close
     if (command == "V" || command == "v") servoRight(s2, command); /// V when open, v when close
     if (command == "U" || command == "u") upFrontSlide(command); /// U when up, u when stop
