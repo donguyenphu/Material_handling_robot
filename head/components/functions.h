@@ -98,3 +98,9 @@ void downFrontSlide(String command) {
     stop(pwm2, M1_IN1, M1_IN2, M1_PWM);
   }
 }
+void upBehindSlide(String command, int state) {
+  forward(pwm, state * SLIDE_RATIO, M4_IN1, M4_IN2, M4_PWM);
+}
+void downBehindSlide(String command, int state) {
+  backward(pwm, state * SLIDE_RATIO, M4_IN1, M4_IN2, M4_PWM);
+}

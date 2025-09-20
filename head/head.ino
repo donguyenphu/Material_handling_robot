@@ -27,6 +27,11 @@ int stateBasketOpen = 0;
 int stateBasketClose = 0;
 bool prevBasketOpen = false, prevBasketClose = false, curBasketOpen = false, curBasketClose = false;
 
+/// state for up and down slide behind
+int stateUpSlide2 = 0; 
+int stateDownSlide2 = 0;
+bool prevUpSlide2 = false, prevDownSlide2 = false, curUpSlide2 = false, curDownSlide2 = false;
+
 void setup() {
   Serial.begin(9600); /// serial baud rate has to be the same as hc06 to read command
   hc06.begin(9600); /// default hc06 baud rate
@@ -57,7 +62,10 @@ void setup() {
   V (switch state to nhỏ) (servo toggle right)
   U  (switch state to nhỏ) (up slide front)
   W (switch state to nhỏ) (down slide front)
-  1
+  1 (toggle) (open basket)
+  2 (toggle) (close basket)
+  3 (toggle) (up slide behind)
+  4 (toggle) (down slide behind)
 */
 
 void loop() {
@@ -95,6 +103,21 @@ void loop() {
       closeBaskets(command, stateBasketClose);
     }
     prevBasketClose = curBasketClose;
+    /// first turn,-> up slide behind, second turn -> stop slide behind
+    prevUpSlide2 = (command == '3');
+    if (curDownSlide2 && !prevDownSlide2) {
+      stateUpSlide2 = (stateUpSlide2 + 1) % 2;
+      upBehindSlide(command, stateUpSlide2);
+    }
+    prevUpSlide2 = curUpSlide2;
+    /// first turn,-> down slide behind, second turn -> stop slide behind
+    curDownSlide2 = (command == '4');
+    if (curDownSlide2 && !prevDownSlide2) {
+      stateDownSlide2 = (stateDownSlide2 + 1) % 2;
+      downBehindSlide(command, stateDownSlide2);
+    }
+    prevDownSlide2 = curDownSlide2;
+    // command area
     if (command == "X" || command == "x") servoLeft(s1, command); /// X when open, x when close
     if (command == "V" || command == "v") servoRight(s2, command); /// V when open, v when close
     if (command == "U" || command == "u") upFrontSlide(command); /// U when up, u when stop
