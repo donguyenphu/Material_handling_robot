@@ -31,7 +31,7 @@ void driveBase(String command) {
   int FBspeed = command.substring(1,3).toInt();
   if (FB == 'B') FBspeed *= -1;
   // x coordinate
-  int LRspeed = (command.substring(4,6).toInt() * FB_TO_LR_RATIO).toInt();
+  int LRspeed = command.substring(4,6).toInt() * FB_TO_LR_RATIO;
   if (LR == 'L') LRspeed *= -1;
   /*
     Instead of using FB and LR seperately

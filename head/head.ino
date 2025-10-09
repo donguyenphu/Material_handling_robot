@@ -20,17 +20,26 @@ Servo s1, s2;
 /// state for up and down both slides
 int stateUpSlide = 0; 
 int stateDownSlide = 0;
-bool prevUpSlide = false, prevDownSlide = false, curUpSlide = false, curDownSlide = false;
+bool prevUpSlide = false, 
+prevDownSlide = false, 
+curUpSlide = false, 
+curDownSlide = false;
 
 /// state for open and close baskets
 int stateBasketOpen = 0;
 int stateBasketClose = 0;
-bool prevBasketOpen = false, prevBasketClose = false, curBasketOpen = false, curBasketClose = false;
+bool prevBasketOpen = false, 
+prevBasketClose = false, 
+curBasketOpen = false, 
+curBasketClose = false;
 
 /// state for up and down slide behind
 int stateUpSlide2 = 0; 
 int stateDownSlide2 = 0;
-bool prevUpSlide2 = false, prevDownSlide2 = false, curUpSlide2 = false, curDownSlide2 = false;
+bool prevUpSlide2 = false, 
+prevDownSlide2 = false, 
+curUpSlide2 = false, 
+curDownSlide2 = false;
 
 void setup() {
   Serial.begin(9600); /// serial baud rate has to be the same as hc06 to read command
@@ -69,11 +78,13 @@ void setup() {
 */
 
 void loop() {
+  Serial.println(0);
   /* command from hc06 to Serial*/
   if (hc06.available()) {
     /* Because c was sent byte to byte, use String can cause memory fragmentation 
     -> we read until the end line to get full command */
     String command = hc06.readStringUntil('\n');
+    Serial.println(command);
     if (command.length() == 6) driveBase(command); /// Format: FxxLxx (F can be B, L can be R)
     /// Z first turn -> up 2 slides, Z second turn -> stop 2 slides
     curUpSlide = (command == "Z");
