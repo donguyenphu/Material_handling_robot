@@ -11,11 +11,11 @@ void stop(Adafruit_PWMServoDriver pwm, int g1, int g2, int gp) {
 }
 void forward(Adafruit_PWMServoDriver pwm, int value, int g1, int g2, int gp) {
   pwm.setPWM(g1, 0, value);
-  pwm.setPWM(g2, 0, 0);
+  pwm.setPWM(g2, value, 0);
   pwm.setPWM(gp, 0, value);
 }
 void backward(Adafruit_PWMServoDriver pwm, int value, int g1, int g2, int gp) {
-  pwm.setPWM(g1, 0, 0);
+  pwm.setPWM(g1, value, 0);
   pwm.setPWM(g2, 0, value);
   pwm.setPWM(gp, 0, value);
 }
@@ -26,7 +26,7 @@ void setAngleServo(Servo s, int degree) {
 // main Functions
 void driveBase(String command) {
   char FB =  command[0];
-  char LR = command[1];
+  char LR = command[3];
   // y coordinate
   int FBspeed = command.substring(1,3).toInt();
   if (FB == 'B') FBspeed *= -1;

@@ -1,5 +1,5 @@
-#define RX_ARDUINO 10
-#define TX_ARDUINO 11
+#define RX_ARDUINO 8
+#define TX_ARDUINO 9
 
 /* adafruit motor shield v2.0 has pca9685 inside
 -> motor can run with 12-bit operation (0-4095)
@@ -10,6 +10,8 @@
 #define SERVO1 10
 #define SERVO2 9
 
+// For controlling PWM and direction of motor, A motor has 3 main channel: 2 directions pins and 1 PWM pins. To make movement, set direct and set PWM value for the motor
+
 /// motor 1 (left wheel)
 #define M1_PWM 8
 #define M1_IN2 9
@@ -17,7 +19,7 @@
 
 /// motor 2 (right)
 #define M2_PWM 13
-#define M2_IN2 11
+#define M2_IN2 12
 #define M2_IN1 11
 
 ///motor 3 (basket)
@@ -34,7 +36,7 @@
 #define FB_TO_LR_RATIO 1
 
 /// power drive base gain
-#define DRIVE_BASE_RATIO 20
+#define DRIVE_BASE_RATIO 41
 
 /// both slide power ratio
 #define SLIDE_RATIO 4000
