@@ -86,37 +86,10 @@ void loop() {
     /* Because c was sent byte to byte, use String can cause memory fragmentation 
     -> we read until the end line to get full command */
     String command = hc06.readStringUntil('\n');
-
+    Serial.println(command);
     if (command.length() == 6) /// Format: FxxLxx (F can be B, L can be R)
     {
-      // driveBase(command);
-      char FB =  command[0];
-      char LR = command[3];
-      // y coordinate
-      int FBspeed = command.substring(1,3).toInt() * FB_TO_LR_RATIO;
-      if (FB == 'B') FBspeed *= -1;
-      // x coordinate
-      int LRspeed = command.substring(4,6).toInt() * FB_TO_LR_RATIO;
-      if (LR == 'L') LRspeed *= -1;
-      /*
-        Instead of using FB and LR seperately
-        We can use consider FB and LR as XY coordinate and use robot-centric movement
-      */
-      int leftMotor = FBspeed + LRspeed;
-      int rightMotor = FBspeed - LRspeed;
-      
-      if (leftMotor >= 0) {
-        forward(pwm, leftMotor * DRIVE_BASE_RATIO, M1_IN1, M1_IN2, M1_PWM);
-      }
-      if (leftMotor < 0) {
-        backward(pwm, -leftMotor * DRIVE_BASE_RATIO, M1_IN1, M1_IN2, M1_PWM);
-      }
-      if (rightMotor >= 0) {
-        forward(pwm, rightMotor * DRIVE_BASE_RATIO, M2_IN1, M2_IN2, M2_PWM);
-      }
-      if (rightMotor < 0) {
-        backward(pwm, -rightMotor * DRIVE_BASE_RATIO, M2_IN1, M2_IN2, M2_PWM);
-      }
+      driveBase(command);
     }
     /// Z first turn -> up 2 slides, Z second turn -> stop 2 slides
     if (command == "Z") {

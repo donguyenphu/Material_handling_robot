@@ -28,7 +28,7 @@ void driveBase(String command) {
   char FB =  command[0];
   char LR = command[3];
   // y coordinate
-  int FBspeed = command.substring(1,3).toInt();
+  int FBspeed = command.substring(1,3).toInt() * FB_TO_LR_RATIO;
   if (FB == 'B') FBspeed *= -1;
   // x coordinate
   int LRspeed = command.substring(4,6).toInt() * FB_TO_LR_RATIO;
@@ -39,6 +39,7 @@ void driveBase(String command) {
   */
   int leftMotor = FBspeed + LRspeed;
   int rightMotor = FBspeed - LRspeed;
+  
   if (leftMotor >= 0) {
     forward(pwm, leftMotor * DRIVE_BASE_RATIO, M1_IN1, M1_IN2, M1_PWM);
   }
@@ -61,10 +62,10 @@ void downBothSlide(String command, int state) {
   backward(pwm, state * SLIDE_RATIO, M4_IN1, M4_IN2, M4_PWM);
 }
 void openBaskets(String command, int state) {
-  forward(pwm, state * SLIDE_RATIO, M3_IN1, M3_IN2, M3_PWM);
+  forward(pwm2, state * SLIDE_RATIO, M3_IN1, M3_IN2, M3_PWM);
 }
 void closeBaskets(String command, int state) {
-  backward(pwm, state * SLIDE_RATIO, M3_IN1, M3_IN2, M3_PWM);
+  backward(pwm2, state * SLIDE_RATIO, M3_IN1, M3_IN2, M3_PWM);
 }
 void servoLeft(Servo s, String command) {
   if (command == "X") {
