@@ -69,18 +69,18 @@ void closeBaskets(String command, int state) {
 }
 void servoLeft(Servo s, String command) {
   if (command == "X") {
-    s.write(180);
+    s.write(0);
   }
   else if (command == "x") {
-    s.write(0);
-  }
-}
-void servoRight(Servo s, String command) {
-  if (command == "V") {
     s.write(180);
   }
+}
+void servoRight(Servo S, String command) {
+  if (command == "V") {
+    S.write(180);
+  }
   else if (command == "v") {
-    s.write(0);
+    S.write(0);
   }
 }
 void upFrontSlide(String command) {

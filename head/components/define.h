@@ -1,5 +1,5 @@
 #define RX_ARDUINO 8
-#define TX_ARDUINO 9
+#define TX_ARDUINO 7
 
 /* adafruit motor shield v2.0 has pca9685 inside
 -> motor can run with 12-bit operation (0-4095)

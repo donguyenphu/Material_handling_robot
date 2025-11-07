@@ -55,9 +55,10 @@ void setup() {
   stop(pwm2, M1_IN1, M1_IN2, M1_PWM); /// slide front
 
   // Set default angle for servos
-  setAngleServo(s1, 0);
+  setAngleServo(s1, 180);
   setAngleServo(s2, 0);
 
+  // check for Adafruit Motorshield v2.0 work or not
   for (byte addr = 1; addr < 127; addr++) {
     Wire.beginTransmission(addr);
     if (Wire.endTransmission() == 0) {
@@ -86,6 +87,7 @@ void loop() {
     /* Because c was sent byte to byte, use String can cause memory fragmentation 
     -> we read until the end line to get full command */
     String command = hc06.readStringUntil('\n');
+    Serial.println(command+" PRESSED");
     Serial.println(command);
     if (command.length() == 6) /// Format: FxxLxx (F can be B, L can be R)
     {
@@ -153,9 +155,9 @@ void loop() {
     }
     // command area
     if (command == "X" || command == "x") servoLeft(s1, command); /// X when open, x when close
-    if (command == "V" || command == "v") servoRight(s2, command); /// V when open, v when close
-    if (command == "U" || command == "u") upFrontSlide(command); /// U when up, u when stop
-    if (command == "W" || command == "w") downFrontSlide(command); /// W when down, w when stop
+    else if (command == "V" || command == "v") servoRight(s2, command); /// V when open, v when close
+    else if (command == "U" || command == "u") upFrontSlide(command); /// U when up, u when stop
+    else if (command == "W" || command == "w") downFrontSlide(command); /// W when down, w when stop
   }
   /* Send Serial command to hc06 */
   if (Serial.available()) {
