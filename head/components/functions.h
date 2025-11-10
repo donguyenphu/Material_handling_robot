@@ -2,7 +2,7 @@ extern Adafruit_PWMServoDriver pwm;
 extern Adafruit_PWMServoDriver pwm2;
 extern Servo s1, s2;
 
-// default functions
+// default pwm functions
 // g1: positive direction, g2: negative direction, gp: set pwm
 void stop(Adafruit_PWMServoDriver pwm, int g1, int g2, int gp) {
   pwm.setPWM(g1, 0, 0);
@@ -23,7 +23,7 @@ void setAngleServo(Servo s, int degree) {
   s.write(degree);
 }
 
-// main Functions
+// main modules' functions
 void driveBase(String command) {
   char FB =  command[0];
   char LR = command[3];
@@ -34,7 +34,6 @@ void driveBase(String command) {
   int LRspeed = command.substring(4,6).toInt() * FB_TO_LR_RATIO;
   if (LR == 'L') LRspeed *= -1;
   /*
-    Instead of using FB and LR seperately
     We can use consider FB and LR as XY coordinate and use robot-centric movement
   */
   int leftMotor = FBspeed + LRspeed;

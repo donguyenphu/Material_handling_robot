@@ -6,14 +6,15 @@
 #include "components/functions.h"
 
 /*
-  Shield 1: M1: base left, M2: base right, M3: basket, M4: slide back, S1: left, S2: right
-  Shield 2: M1: slide front
+  Shield 1: M1: base left, M2: base right, M4: slide back, S1: left, S2: right
+  Shield 2: M1: slide front, M3: basket
 */
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x60); /// level 1 (attached to arduino uno) adafruit motor shield v2.0
 Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x61); /// level 2 (attached to level 1) adafruit motor shield v2.0
 
-SoftwareSerial hc06(RX_ARDUINO, TX_ARDUINO); // RX, TX
+//To receive and transmit data, rx arduino -> tx hc06 and tx arduino -> rx hc06
+SoftwareSerial hc06(RX_ARDUINO, TX_ARDUINO);
 
 Servo s1, s2;
 
@@ -34,9 +35,10 @@ void setup() {
   Serial.begin(9600); /// serial baud rate has to be the same as hc06 to read command
   hc06.begin(9600); /// default hc06 baud rate
   pwm.begin();
-  pwm.setPWMFreq(1600); // 50Hz for servo
+  // 50Hz for servo, 1600Hz for motor
+  pwm.setPWMFreq(1600); 
   pwm2.begin();
-  pwm2.setPWMFreq(1600); // 50Hz for servo
+  pwm2.setPWMFreq(1600);
   s1.attach(10); /// D10 of Arduino (top gate)
   s2.attach(9); /// D9 of arduino (bottom gate)
 
@@ -50,7 +52,7 @@ void setup() {
   // Initialize speed all motors
   stop(pwm, M1_IN1, M1_IN2, M1_PWM); /// drivebase left
   stop(pwm, M2_IN1, M2_IN2, M2_PWM); /// drivebase right
-  stop(pwm, M3_IN1, M3_IN2, M3_PWM); /// basket
+  stop(pwm2, M3_IN1, M3_IN2, M3_PWM); /// basket
   stop(pwm, M4_IN1, M4_IN2, M4_PWM); /// slide behind
   stop(pwm2, M1_IN1, M1_IN2, M1_PWM); /// slide front
 
@@ -85,10 +87,9 @@ void loop() {
   /* command from hc06 to Serial*/
   if (hc06.available()) {
     /* Because c was sent byte to byte, use String can cause memory fragmentation 
-    -> we read until the end line to get full command */
+    -> we read until the end line to get full command from bluetooth controller */
     String command = hc06.readStringUntil('\n');
     Serial.println(command+" PRESSED");
-    Serial.println(command);
     if (command.length() == 6) /// Format: FxxLxx (F can be B, L can be R)
     {
       driveBase(command);
