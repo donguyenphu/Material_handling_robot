@@ -52,9 +52,9 @@ void setup() {
   // Initialize speed all motors
   stop(pwm, M1_IN1, M1_IN2, M1_PWM); /// drivebase left
   stop(pwm, M2_IN1, M2_IN2, M2_PWM); /// drivebase right
-  stop(pwm2, M3_IN1, M3_IN2, M3_PWM); /// basket
+  stop(pwm, M3_IN1, M3_IN2, M3_PWM); /// basket
   stop(pwm, M4_IN1, M4_IN2, M4_PWM); /// slide behind
-  stop(pwm2, M1_IN1, M1_IN2, M1_PWM); /// slide front
+  stop(pwm, M1_IN1, M1_IN2, M1_PWM); /// slide front
 
   // Set default angle for servos
   setAngleServo(s1, 180);

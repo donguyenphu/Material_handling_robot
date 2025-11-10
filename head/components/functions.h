@@ -61,10 +61,10 @@ void downBothSlide(String command, int state) {
   backward(pwm, state * SLIDE_RATIO, M4_IN1, M4_IN2, M4_PWM);
 }
 void openBaskets(String command, int state) {
-  forward(pwm2, state * SLIDE_RATIO, M3_IN1, M3_IN2, M3_PWM);
+  forward(pwm, state * SLIDE_RATIO, M3_IN1, M3_IN2, M3_PWM);
 }
 void closeBaskets(String command, int state) {
-  backward(pwm2, state * SLIDE_RATIO, M3_IN1, M3_IN2, M3_PWM);
+  backward(pwm, state * SLIDE_RATIO, M3_IN1, M3_IN2, M3_PWM);
 }
 void servoLeft(Servo s, String command) {
   if (command == "X") {
